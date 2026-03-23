@@ -1,0 +1,1450 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Groundmark — Track marketing where it happens.</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --max: 1120px;
+      --radius: 18px;
+      --radius-lg: 26px;
+
+      /* Brand */
+      --accent: #1f8f55;
+      --accent-2:#2aa65f;
+      --accent-rgb: 31,143,85;
+
+      /* Light theme */
+      --bg: #ffffff;
+      --bg-soft: #f8fbf9;
+      --text: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --soft: #f1f5f9;
+      --pill: #e9f7ef;
+      --surface: rgba(255,255,255,.78);
+      --surface-strong: rgba(255,255,255,.88);
+      --surface-soft: rgba(255,255,255,.65);
+      --surface-card: rgba(255,255,255,.82);
+      --nav-bg: rgba(255,255,255,.78);
+      --shadow: 0 20px 60px rgba(2, 6, 23, .08);
+      --shadow-soft: 0 12px 30px rgba(2,6,23,.04);
+      --shadow-strong: 0 18px 55px rgba(2,6,23,.06);
+      --glow-1: rgba(42,166,95,.10);
+      --glow-2: rgba(31,143,85,.08);
+      --arrow-bg: #fff;
+      --toggle-bg: #eef6f0;
+      --toggle-knob: #ffffff;
+      --toggle-text: #0f172a;
+    }
+
+    html[data-theme="dark"]{
+      --bg: #08110d;
+      --bg-soft: #0c1712;
+      --text: #e7f2ec;
+      --muted: #9ab0a4;
+      --line: rgba(148,163,184,.16);
+      --soft: #101b16;
+      --pill: rgba(31,143,85,.16);
+      --surface: rgba(10,18,14,.78);
+      --surface-strong: rgba(12,21,16,.92);
+      --surface-soft: rgba(10,18,14,.72);
+      --surface-card: rgba(12,21,16,.88);
+      --nav-bg: rgba(8,17,13,.82);
+      --shadow: 0 24px 70px rgba(0,0,0,.30);
+      --shadow-soft: 0 16px 38px rgba(0,0,0,.22);
+      --shadow-strong: 0 22px 60px rgba(0,0,0,.28);
+      --glow-1: rgba(42,166,95,.16);
+      --glow-2: rgba(31,143,85,.10);
+      --arrow-bg: #0f1a15;
+      --toggle-bg: rgba(31,143,85,.22);
+      --toggle-knob: #ffffff;
+      --toggle-text: #e7f2ec;
+    }
+
+    *{box-sizing:border-box}
+    html, body { height: 100%; scroll-behavior:smooth; }
+
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      position: relative;
+      padding-top: 72px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Fixed brand glow */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(1200px 600px at 70% 15%, var(--glow-1), transparent 60%),
+        radial-gradient(900px 500px at 10% 20%, var(--glow-2), transparent 55%);
+    }
+
+    a{color:inherit; text-decoration:none}
+    .container{max-width:var(--max); margin:0 auto; padding:0 24px}
+    .section{padding:90px 0}
+    .section.tight{padding:70px 0}
+    .kicker{
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color: var(--accent);
+      font-weight:700;
+    }
+    .h2{
+      font-size:44px;
+      line-height:1.08;
+      margin:12px 0 12px;
+      letter-spacing:-.02em;
+    }
+    .sub{
+      font-size:16px;
+      color: var(--muted);
+      max-width: 720px;
+      line-height:1.65;
+      margin:0 auto;
+    }
+    .center{text-align:center}
+
+    /* Top Nav */
+    .nav{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      height:72px;
+      gap:16px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+      letter-spacing:-.02em;
+      min-width:0;
+    }
+    .logo{
+      width:28px;height:28px;border-radius:10px;
+      display:grid;place-items:center;
+      background: linear-gradient(145deg, rgba(var(--accent-rgb),.15), rgba(var(--accent-rgb),.05));
+      border:1px solid rgba(var(--accent-rgb),.25);
+      flex: 0 0 auto;
+    }
+    .logo svg{display:block}
+    .brand-text{
+      height:100px;
+      width:auto;
+      display:block;
+    }
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:26px;
+      color: var(--text);
+      font-weight:600;
+      font-size:14px;
+    }
+    .nav-links a{opacity:.72}
+    .nav-links a:hover{opacity:1}
+    .nav-cta{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-left:auto;
+    }
+
+    /* Theme Toggles */
+    .theme-toggle{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 10px 8px 12px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: var(--surface-strong);
+      box-shadow: var(--shadow-soft);
+      color: var(--toggle-text);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .08s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .theme-toggle:active{transform: translateY(1px)}
+    .theme-toggle-label{
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:-.01em;
+    }
+    .theme-switch{
+      width:52px;
+      height:30px;
+      border-radius:999px;
+      background: var(--toggle-bg);
+      position:relative;
+      border:1px solid rgba(var(--accent-rgb),.22);
+      flex: 0 0 auto;
+    }
+    .theme-switch::before{
+      content:"";
+      position:absolute;
+      top:3px;
+      left:3px;
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      background: var(--toggle-knob);
+      box-shadow: 0 2px 8px rgba(0,0,0,.16);
+      transition: transform .25s ease;
+    }
+    html[data-theme="dark"] .theme-switch::before{
+      transform: translateX(22px);
+    }
+
+    /* Mobile floating toggle */
+    .theme-toggle-mobile{
+      display:none;
+      position:fixed;
+      top:84px;
+      right:18px;
+      z-index:998;
+      padding: 10px;
+      gap:0;
+      border-radius:999px;
+    }
+
+    /* Buttons */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:12px 18px;
+      border-radius: 999px;
+      font-weight:700;
+      font-size:14px;
+      border:1px solid transparent;
+      cursor:pointer;
+      transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+      white-space:nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active{transform: translateY(1px)}
+    .btn-primary{
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      color:white;
+      box-shadow: 0 10px 24px rgba(var(--accent-rgb),.22);
+    }
+    .btn-primary:hover{box-shadow: 0 14px 30px rgba(var(--accent-rgb),.28)}
+
+    /* Hero */
+    .hero{padding:90px 0 70px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 44px;
+      align-items:center;
+    }
+    .pill{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:9px 14px;
+      border-radius:999px;
+      background: var(--pill);
+      color: var(--accent);
+      font-weight:700;
+      font-size:13px;
+      border: 1px solid rgba(var(--accent-rgb),.14);
+    }
+    .dot{
+      width:8px;height:8px;border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(var(--accent-rgb),.12);
+    }
+    h1{
+      font-size:66px;
+      line-height:1.02;
+      margin:18px 0 14px;
+      letter-spacing:-.035em;
+    }
+    .green{color: var(--accent)}
+    .lead{
+      color: var(--muted);
+      font-size:16px;
+      line-height:1.7;
+      max-width: 560px;
+      margin:0 0 26px;
+    }
+    .hero-actions{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+    .hero-notes{
+      display:flex;
+      gap:22px;
+      flex-wrap:wrap;
+      margin-top:26px;
+      color:var(--muted);
+      font-weight:600;
+      font-size:13px;
+    }
+    .hero-notes span{display:inline-flex; align-items:center; gap:8px}
+    .hero-notes i{
+      width:7px;height:7px;border-radius:999px;background: var(--accent);
+      display:inline-block;
+    }
+
+    /* Carousel */
+    .carousel-section{
+      padding: 18px 0 34px;
+      background: transparent;
+      border: 0;
+    }
+    .carousel-wrapper{ position:relative; }
+    .carousel-viewport{
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      padding: 0;
+    }
+    .carousel-viewport::-webkit-scrollbar{ display:none; }
+    .carousel-track{
+      display:flex;
+      gap:20px;
+      padding: 0;
+    }
+    .carousel-slide{
+      flex:0 0 340px;
+      scroll-snap-align:start;
+    }
+    .carousel-slide img{
+      width:100%;
+      height:700px;
+      object-fit:cover;
+      border-radius:26px;
+      box-shadow:none;
+      border:1px solid var(--line);
+      display:block;
+      background: var(--surface-strong);
+    }
+    .carousel-btn{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:46px;
+      height:46px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: var(--arrow-bg);
+      color: var(--text);
+      font-size:28px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      box-shadow:none;
+    }
+    .carousel-btn.prev{ left:-12px; }
+    .carousel-btn.next{ right:-12px; }
+
+    /* Metrics strip */
+    .metrics{
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      background: var(--surface-soft);
+    }
+    .metrics-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      align-items:center;
+      padding: 36px 0;
+    }
+    .metric{
+      text-align:center;
+      padding: 8px 0;
+    }
+    .metric .num{
+      font-size:28px;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+    .metric .lbl{
+      margin-top:6px;
+      color: var(--muted);
+      font-size:13px;
+      font-weight:600;
+    }
+
+    /* Feature cards */
+    .cards-grid{
+      margin-top: 42px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .card-box{
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 22px 20px;
+      background: var(--surface-card);
+      box-shadow: var(--shadow-soft);
+      min-height: 160px;
+    }
+    .icon{
+      width:44px;height:44px;border-radius:14px;
+      display:grid;place-items:center;
+      background: rgba(var(--accent-rgb),.10);
+      border:1px solid rgba(var(--accent-rgb),.18);
+      margin-bottom: 16px;
+    }
+    .card-box h3{
+      margin:0 0 8px;
+      font-size:15px;
+      font-weight:800;
+      letter-spacing:-.01em;
+    }
+    .card-box p{
+      margin:0;
+      color: var(--muted);
+      line-height:1.7;
+      font-size:13.5px;
+      font-weight:500;
+    }
+
+    /* How it works */
+    .steps{
+      margin-top: 52px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items:start;
+    }
+    .step{padding-top:10px}
+    .step .big{
+      font-size:64px;
+      font-weight:800;
+      letter-spacing:-.05em;
+      color: rgba(var(--accent-rgb), .30);
+      margin:0 0 8px;
+    }
+    html[data-theme="dark"] .step .big{
+      color: rgba(42, 166, 95, .42);
+    }
+    .step h4{
+      margin: 0 0 10px;
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:-.01em;
+    }
+    .step p{
+      margin:0;
+      color: var(--muted);
+      line-height:1.7;
+      font-size:13.5px;
+      font-weight:500;
+      max-width: 320px;
+    }
+
+    /* Testimonials */
+    .testimonials-section{
+      background: transparent;
+      padding: 90px 0;
+      border-top: none;
+    }
+    .testimonials-shell{
+      position: relative;
+      border-radius: var(--radius-lg);
+      padding: 46px 28px;
+      background:
+        radial-gradient(900px 420px at 20% 10%, rgba(var(--accent-rgb),.14), transparent 55%),
+        radial-gradient(900px 420px at 85% 30%, rgba(2,6,23,.06), transparent 60%),
+        var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-strong);
+      overflow: hidden;
+    }
+    html[data-theme="dark"] .testimonials-shell{
+      background:
+        radial-gradient(900px 420px at 20% 10%, rgba(var(--accent-rgb),.18), transparent 55%),
+        radial-gradient(900px 420px at 85% 30%, rgba(255,255,255,.03), transparent 60%),
+        var(--surface);
+    }
+    .testimonials-header{
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .testimonials-grid{
+      margin-top: 34px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .testimonial-card.featured{ padding: 26px; }
+    .testimonial-card{
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-card);
+      box-shadow: var(--shadow-soft);
+      padding: 22px;
+      text-align:left;
+      display:flex;
+      flex-direction:column;
+      min-height: 220px;
+    }
+    .testimonial-quote{
+      margin: 0 0 14px;
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .testimonial-quote .q{
+      color: rgba(var(--accent-rgb),.9);
+      font-weight: 900;
+    }
+    .testimonial-meta{
+      margin-top:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .testimonial-left{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .avatar{
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      background: rgba(var(--accent-rgb),.10);
+      border: 1px solid rgba(var(--accent-rgb),.22);
+      font-weight: 900;
+      color: var(--accent);
+      flex: 0 0 auto;
+    }
+    .testimonial-person{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .testimonial-name{
+      font-weight: 900;
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .testimonial-role{
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .testimonial-stars{
+      font-size: 14px;
+      letter-spacing: .08em;
+      color: var(--accent);
+      white-space:nowrap;
+    }
+    .testimonials-stack{
+      display:grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 18px;
+    }
+
+    /* Pricing */
+    .pricing-grid{
+      margin-top: 44px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items:stretch;
+    }
+    .price-card{
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 26px 24px 22px;
+      box-shadow: var(--shadow-soft);
+      display:flex;
+      flex-direction:column;
+      min-height: 420px;
+      position:relative;
+    }
+    .price-card.pop{
+      border-color: rgba(var(--accent-rgb),.55);
+      box-shadow: 0 18px 55px rgba(var(--accent-rgb),.15);
+      background: linear-gradient(180deg, rgba(var(--accent-rgb),.08), var(--surface-strong));
+    }
+    html[data-theme="dark"] .price-card.pop{
+      background: linear-gradient(180deg, rgba(var(--accent-rgb),.16), rgba(12,21,16,.95));
+    }
+    .badge{
+      position:absolute;
+      left:50%;
+      transform: translateX(-50%);
+      top:-12px;
+      background: var(--surface-strong);
+      border:1px solid rgba(var(--accent-rgb),.45);
+      color: var(--accent);
+      font-weight:800;
+      font-size:12px;
+      padding: 6px 12px;
+      border-radius:999px;
+      box-shadow: 0 10px 22px rgba(2,6,23,.06);
+      white-space: nowrap;
+    }
+    .trial-badge{
+      position:absolute;
+      top:18px;
+      right:18px;
+      background: rgba(var(--accent-rgb),.12);
+      border:1px solid rgba(var(--accent-rgb),.24);
+      color: var(--accent);
+      font-weight:800;
+      font-size:11px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      padding: 7px 10px;
+      border-radius:999px;
+      white-space:nowrap;
+    }
+    .tier{font-weight:800; font-size:16px; margin:0 0 10px}
+    .price{
+      font-size:44px;
+      letter-spacing:-.03em;
+      font-weight:900;
+      margin: 0;
+      line-height:1.0;
+    }
+    .per{
+      color: var(--muted);
+      font-weight:700;
+      font-size:13px;
+      margin-top:6px;
+    }
+    .desc{
+      margin: 14px 0 18px;
+      color: var(--muted);
+      line-height:1.7;
+      font-weight:600;
+      font-size:13px;
+      max-width: 320px;
+    }
+    .checks{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin: 10px 0 22px;
+      padding:0;
+      list-style:none;
+      color:var(--text);
+      font-weight:700;
+      font-size:13px;
+    }
+    .checks li{display:flex; align-items:flex-start; gap:10px}
+    .check{
+      width:18px;height:18px;border-radius:999px;
+      background: rgba(var(--accent-rgb),.12);
+      border: 1px solid rgba(var(--accent-rgb),.22);
+      display:grid; place-items:center;
+      flex:0 0 auto;
+      margin-top:1px;
+      color: var(--accent);
+    }
+    .cross{
+      width:18px;height:18px;border-radius:999px;
+      background: rgba(239,68,68,.10);
+      border:1px solid rgba(239,68,68,.18);
+      display:grid; place-items:center;
+      flex:0 0 auto;
+      margin-top:1px;
+      color:#ef4444;
+    }
+    .price-card .spacer{flex:1 1 auto}
+    .pricing-cta{
+      margin-top: 34px;
+      display:flex;
+      justify-content:center;
+    }
+
+    /* Trial banner section */
+    .trial-section{
+      padding: 70px 0;
+      background: transparent;
+      border-top: none;
+    }
+    .trial-banner{
+      max-width: 960px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(700px 280px at 15% 20%, rgba(var(--accent-rgb),.16), transparent 55%),
+        radial-gradient(700px 280px at 85% 30%, rgba(var(--accent-rgb),.10), transparent 60%),
+        var(--surface);
+      box-shadow: var(--shadow-soft);
+      padding: 34px 30px;
+      display:grid;
+      grid-template-columns: 1.1fr auto;
+      gap: 22px;
+      align-items:center;
+    }
+    html[data-theme="dark"] .trial-banner{
+      background:
+        radial-gradient(700px 280px at 15% 20%, rgba(var(--accent-rgb),.22), transparent 55%),
+        radial-gradient(700px 280px at 85% 30%, rgba(var(--accent-rgb),.12), transparent 60%),
+        var(--surface);
+    }
+    .trial-copy{
+      text-align:left;
+    }
+    .trial-title{
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      margin: 10px 0 10px;
+      font-weight: 900;
+    }
+    .trial-text{
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+      font-weight: 600;
+      max-width: 620px;
+      margin: 0;
+    }
+    .trial-pills{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    .trial-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      background: rgba(var(--accent-rgb),.10);
+      border:1px solid rgba(var(--accent-rgb),.18);
+      color: var(--accent);
+      font-weight:800;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    /* Support Modal */
+    .support-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:1000;
+    }
+    .support-modal.active{
+      display:flex;
+    }
+    .support-box{
+      background: var(--surface-strong);
+      color: var(--text);
+      padding:36px;
+      border-radius:18px;
+      max-width:520px;
+      width:90%;
+      border:1px solid var(--line);
+      box-shadow:0 25px 70px rgba(0,0,0,.25);
+      position:relative;
+    }
+    .support-box h3{
+      margin-top:0;
+      margin-bottom:20px;
+      font-size:22px;
+    }
+    .support-box p{
+      margin:14px 0;
+      line-height:1.6;
+    }
+    .support-close{
+      position:absolute;
+      top:12px;
+      right:14px;
+      border:none;
+      background:none;
+      color: var(--text);
+      font-size:20px;
+      cursor:pointer;
+    }
+
+    footer{
+      padding: 26px 0 40px;
+      color: var(--muted);
+      font-weight:600;
+      font-size:13px;
+      border-top: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+    footer .foot{
+      display:flex; justify-content:space-between; align-items:center;
+      gap:14px; flex-wrap:wrap;
+    }
+
+    @media (max-width: 980px){
+      h1{font-size:54px}
+      .hero-grid{grid-template-columns: 1fr; gap: 28px}
+      .metrics-grid{grid-template-columns: repeat(2, 1fr)}
+      .cards-grid{grid-template-columns: repeat(2, 1fr)}
+      .steps{grid-template-columns: 1fr; gap: 18px}
+      .pricing-grid{grid-template-columns: 1fr; gap: 16px}
+      .testimonials-grid{grid-template-columns: 1fr}
+      .testimonials-stack{grid-template-rows: auto}
+      .trial-banner{grid-template-columns: 1fr}
+      .nav-links{display:none}
+    }
+
+    @media(max-width:900px){
+      .carousel-slide{ flex:0 0 280px; }
+      .carousel-slide img{ height:560px; }
+    }
+
+    @media (max-width: 720px){
+      .nav-inner{gap:10px}
+      .brand-text{height:100px}
+      .theme-toggle-desktop{display:none}
+      .theme-toggle-mobile{display:inline-flex}
+      .btn{padding:11px 14px}
+      .nav-cta{gap:8px}
+      .hero{padding-top:120px}
+    }
+
+    @media (max-width: 520px){
+      h1{font-size:44px}
+      .cards-grid{grid-template-columns: 1fr}
+      .container{padding: 0 18px}
+      .hero{padding-bottom:56px}
+      .carousel-slide{ flex:0 0 220px; }
+      .carousel-slide img{ height:460px; }
+      .carousel-btn{ width:40px; height:40px; font-size:24px; }
+      .brand-text{height:100px}
+      .trial-title{font-size:28px}
+      .trial-badge{
+        position:static;
+        display:inline-flex;
+        margin-bottom:14px;
+      }
+      .theme-toggle-mobile{
+        top:86px;
+        right:14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="#">
+          <span class="logo" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22s7-4.4 7-11a7 7 0 1 0-14 0c0 6.6 7 11 7 11Z" stroke="#1f8f55" stroke-width="2"/>
+              <circle cx="12" cy="11" r="2.5" fill="#1f8f55"/>
+            </svg>
+          </span>
+
+          <img
+            id="brandLogo"
+            src="https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/Groundmark%20Logo.png/:/rs=w:1440,h:1440"
+            alt="Groundmark"
+            class="brand-text"
+          >
+        </a>
+
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#features">Features</a>
+          <a href="#how">How It Works</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#" id="supportBtn">Support</a>
+        </nav>
+
+        <div class="nav-cta">
+          <button class="theme-toggle theme-toggle-desktop" id="themeToggleDesktop" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+            <span class="theme-toggle-label" id="themeToggleDesktopLabel">Light</span>
+            <span class="theme-switch" aria-hidden="true"></span>
+          </button>
+
+          <a class="btn btn-primary" href="https://testflight.apple.com/join/hyxPFyv3" target="_blank" rel="noopener">
+            Try Groundmark
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating mobile toggle -->
+  <button class="theme-toggle theme-toggle-mobile" id="themeToggleMobile" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+    <span class="theme-switch" aria-hidden="true"></span>
+  </button>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="pill">
+              <span class="dot" aria-hidden="true"></span>
+              Launching April 2026 on iOS. Click below for early access.
+            </div>
+
+            <h1>
+              Track marketing<br/>
+              <span class="green">where it happens.</span>
+            </h1>
+
+            <p class="lead">
+              Groundmark is the simple, modern way for field teams to plan routes,
+              capture proof, and track direct marketing on the ground — in real time.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://testflight.apple.com/join/hyxPFyv3" target="_blank" rel="noopener">
+                Try Groundmark FREE
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
+            <div class="hero-notes" aria-label="Highlights">
+              <span><i aria-hidden="true"></i> iOS</span>
+              <span><i aria-hidden="true"></i> Early Access</span>
+              <span><i aria-hidden="true"></i> Free to Start</span>
+              <span><i aria-hidden="true"></i> 7-day Free Trial • Pro &amp; Elite</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APP SCREENSHOT CAROUSEL -->
+    <section class="carousel-section">
+      <div class="container">
+        <div class="carousel-wrapper">
+          <button class="carousel-btn prev" id="carouselPrev" type="button" aria-label="Previous screenshots">‹</button>
+
+          <div class="carousel-viewport" id="carouselViewport">
+            <div class="carousel-track">
+              <div class="carousel-slide">
+                <img src="https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/01.png/:/rs=w:1440,h:1440" alt="Groundmark screenshot 1">
+              </div>
+              <div class="carousel-slide">
+                <img src="https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/02.png/:/rs=w:1440,h:1440" alt="Groundmark screenshot 2">
+              </div>
+              <div class="carousel-slide">
+                <img src="https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/03.png/:/rs=w:1440,h:1440" alt="Groundmark screenshot 3">
+              </div>
+              <div class="carousel-slide">
+                <img src="https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/04.png/:/rs=w:1440,h:1440" alt="Groundmark screenshot 4">
+              </div>
+              <div class="carousel-slide">
+                <img src="https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/05.png/:/rs=w:1440,h:1440" alt="Groundmark screenshot 5">
+              </div>
+              <div class="carousel-slide">
+                <img src="https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/06.png/:/rs=w:1440,h:1440" alt="Groundmark screenshot 6">
+              </div>
+              <div class="carousel-slide">
+                <img src="https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/07.png/:/rs=w:1440,h:1440" alt="Groundmark screenshot 7">
+              </div>
+              <div class="carousel-slide">
+                <img src="https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/08.png/:/rs=w:1440,h:1440" alt="Groundmark screenshot 8">
+              </div>
+            </div>
+          </div>
+
+          <button class="carousel-btn next" id="carouselNext" type="button" aria-label="Next screenshots">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- METRICS -->
+    <section class="metrics">
+      <div class="container">
+        <div class="metrics-grid">
+          <div class="metric">
+            <div class="num">33%</div>
+            <div class="lbl">Increased Team Productivity</div>
+          </div>
+          <div class="metric">
+            <div class="num">2+ hrs</div>
+            <div class="lbl">Saved on average</div>
+          </div>
+          <div class="metric">
+            <div class="num">99.9%</div>
+            <div class="lbl">Uptime SLA</div>
+          </div>
+          <div class="metric">
+            <div class="num">4.9★</div>
+            <div class="lbl">Beta Rating</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="section">
+      <div class="container center">
+        <div class="kicker">FEATURES</div>
+        <div class="h2">Everything your field team needs.<br/>Nothing they don’t.</div>
+        <p class="sub">
+          Built from the ground up for direct marketing, merchandising, and field sales teams
+          who need to move fast and prove results.
+        </p>
+
+        <div class="cards-grid" role="list">
+          <article class="card-box" role="listitem">
+            <div class="icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M6 7h12M6 12h8M6 17h12" stroke="#1f8f55" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="18" cy="12" r="2" fill="#1f8f55" opacity=".25"/>
+              </svg>
+            </div>
+            <h3>Smart Route Planning</h3>
+            <p>Optimise daily routes for your field teams. Drag, drop, and rearrange stops in seconds — no more guesswork.</p>
+          </article>
+
+          <article class="card-box" role="listitem">
+            <div class="icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M4 7h16v12H4z" stroke="#1f8f55" stroke-width="2" />
+                <path d="M8 11h8M8 14h6" stroke="#1f8f55" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Proof of Activity</h3>
+            <p>Geo-tagged photos, timestamps, and digital signatures. Every visit captured with verifiable evidence.</p>
+          </article>
+
+          <article class="card-box" role="listitem">
+            <div class="icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M5 19V9M12 19V5M19 19v-7" stroke="#1f8f55" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Live Campaign Tracking</h3>
+            <p>Real-time dashboards show exactly where your teams are and what they’ve accomplished — as it happens.</p>
+          </article>
+
+          <article class="card-box" role="listitem">
+            <div class="icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 22s7-4.4 7-11a7 7 0 1 0-14 0c0 6.6 7 11 7 11Z" stroke="#1f8f55" stroke-width="2"/>
+                <circle cx="12" cy="11" r="2.5" fill="#1f8f55" opacity=".25"/>
+              </svg>
+            </div>
+            <h3>Territory Management</h3>
+            <p>Define zones, assign areas, and ensure full coverage across your markets with intelligent territory mapping.</p>
+          </article>
+
+          <article class="card-box" role="listitem">
+            <div class="icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 8v5l3 2" stroke="#1f8f55" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="9" stroke="#1f8f55" stroke-width="2" opacity=".9"/>
+              </svg>
+            </div>
+            <h3>Team Portal &amp; Content Library</h3>
+            <p>Save time by quickly accessing your team and all uploaded media with a single tap.</p>
+          </article>
+
+          <article class="card-box" role="listitem">
+            <div class="icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6l7-4Z" stroke="#1f8f55" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3>Team Resources</h3>
+            <p>Safeguard your workflow through access to company resources uploaded for training and operational use.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="section tight" style="background: var(--surface-soft); border: 0;">
+      <div class="container center">
+        <div class="kicker">HOW IT WORKS</div>
+        <div class="h2">Three steps to ground-level visibility</div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="big">01</div>
+            <h4>Plan Your Routes</h4>
+            <p>Import locations, build optimised routes, and assign them to your team — all from the dashboard.</p>
+          </div>
+
+          <div class="step">
+            <div class="big">02</div>
+            <h4>Hit the Ground</h4>
+            <p>Your team follows their routes on mobile, checking in at each stop and capturing proof of activity.</p>
+          </div>
+
+          <div class="step">
+            <div class="big">03</div>
+            <h4>Track &amp; Report</h4>
+            <p>See live progress, review completed visits, and generate reports that prove campaign productivity instantly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials-section" id="testimonials">
+      <div class="container">
+        <div class="testimonials-shell">
+          <div class="testimonials-header">
+            <div class="kicker">TESTIMONIALS</div>
+            <div class="h2">Trusted by teams in the field</div>
+            <p class="sub">
+              Drop your real customer quotes in here after launch — this section will look great either way.
+            </p>
+          </div>
+
+          <div class="testimonials-grid" role="list">
+            <article class="testimonial-card featured" role="listitem">
+              <p class="testimonial-quote">
+                <span class="q">“</span>
+                Groundmark completely changed how we run our field campaigns. Route planning used to take our managers over an hour every morning and now it's done in minutes. The geo-tagged proof of activity alone has saved us countless back-and-forth emails with clients.
+                <span class="q">”</span>
+              </p>
+              <div class="testimonial-meta">
+                <div class="testimonial-left">
+                  <div class="avatar" aria-hidden="true">JH</div>
+                  <div class="testimonial-person">
+                    <div class="testimonial-name">Joseph H.</div>
+                    <div class="testimonial-role">Owner • Vanguard Property Buyers</div>
+                  </div>
+                </div>
+                <div class="testimonial-stars" aria-label="5 star rating">★★★★★</div>
+              </div>
+            </article>
+
+            <div class="testimonials-stack">
+              <article class="testimonial-card" role="listitem">
+                <p class="testimonial-quote">
+                  <span class="q">“</span>
+                  As an owner, I needed a way to hold my teams accountable without breathing down their necks. Groundmark delivers exactly that, real-time proof of every visit, and reports I can actually trust.
+                  <span class="q">”</span>
+                </p>
+                <div class="testimonial-meta">
+                  <div class="testimonial-left">
+                    <div class="avatar" aria-hidden="true">KJ</div>
+                    <div class="testimonial-person">
+                      <div class="testimonial-name">Kameron J.</div>
+                      <div class="testimonial-role">Owner • Keystone Property Group</div>
+                    </div>
+                  </div>
+                  <div class="testimonial-stars" aria-label="5 star rating">★★★★★</div>
+                </div>
+              </article>
+
+              <article class="testimonial-card" role="listitem">
+                <p class="testimonial-quote">
+                  <span class="q">“</span>
+                  We onboarded 15 new reps last quarter and Groundmark cut our field time nearly in half. The route planning is intuitive, and the live dashboard gives me full visibility without micromanaging anyone.
+                  <span class="q">”</span>
+                </p>
+                <div class="testimonial-meta">
+                  <div class="testimonial-left">
+                    <div class="avatar" aria-hidden="true">LM</div>
+                    <div class="testimonial-person">
+                      <div class="testimonial-name">Laura Mitchell</div>
+                      <div class="testimonial-role">Operations Director • EJH Group LLC</div>
+                    </div>
+                  </div>
+                  <div class="testimonial-stars" aria-label="5 star rating">★★★★★</div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section">
+      <div class="container center">
+        <div class="kicker">PRICING</div>
+        <div class="h2">Simple pricing that scales with you</div>
+        <p class="sub">Start free. Upgrade when you’re ready.</p>
+
+        <div class="pricing-grid">
+          <article class="price-card">
+            <div class="tier">Basics</div>
+            <p class="price">Free</p>
+            <div class="per">up to 1 users / month</div>
+            <p class="desc">Perfect for individuals or small teams testing the app before committing.</p>
+
+            <ul class="checks">
+              <li><span class="check" aria-hidden="true">✓</span> Create & manage 1 campaign</li>
+              <li><span class="check" aria-hidden="true">✓</span> Plan routes with up to 50 stops</li>
+              <li><span class="check" aria-hidden="true">✓</span> Basic lead tracking</li>
+              <li><span class="check" aria-hidden="true">✓</span> Set custom map boundaries</li>
+              <li><span class="check" aria-hidden="true">✓</span> Up to 100 entries per campaign</li>
+              <li><span class="check" aria-hidden="true">✓</span> Up to 10 team member resource uploads</li>
+              <li><span class="cross" aria-hidden="true">✖</span> Saved routes, route history, data exports, team member expansion not included</li>
+            </ul>
+
+            <div class="spacer"></div>
+          </article>
+
+          <article class="price-card pop">
+            <div class="badge">Most Popular</div>
+            <div class="trial-badge">7-Day Free Trial</div>
+            <div class="tier">Pro</div>
+            <p class="price">$19</p>
+            <div class="per">up to 3 users / month</div>
+            <div class="per">7 day free trial</div>
+            <p class="desc">For growing teams that need full visibility and reporting.</p>
+
+            <ul class="checks">
+              <li><span class="check" aria-hidden="true">✓</span> Everything in Basics, plus</li>
+              <li><span class="check" aria-hidden="true">✓</span> Save up to 10 routes</li>
+              <li><span class="check" aria-hidden="true">✓</span> Up to 250 stops per route</li>
+              <li><span class="check" aria-hidden="true">✓</span> Bulk Address Import - 100 per import</li>
+              <li><span class="check" aria-hidden="true">✓</span> Route history access</li>
+              <li><span class="check" aria-hidden="true">✓</span> Up to 10 active campaigns</li>
+              <li><span class="check" aria-hidden="true">✓</span> Up to 500 property entires per campaign</li>
+              <li><span class="check" aria-hidden="true">✓</span> Campaign data exports</li>
+              <li><span class="check" aria-hidden="true">✓</span> Up to 3 team members</li>
+              <li><span class="check" aria-hidden="true">✓</span> Up to 25 team resource uploads</li>
+            </ul>
+
+            <div class="spacer"></div>
+          </article>
+
+          <article class="price-card">
+            <div class="trial-badge">7-Day Free Trial</div>
+            <div class="tier">Elite</div>
+            <p class="price" style="font-size:40px">$49</p>
+            <div class="per">unlimited users / month</div>
+            <div class="per">7 day free trial</div>
+            <p class="desc">For large-scale operations with expanded requirements.</p>
+
+            <ul class="checks">
+              <li><span class="check" aria-hidden="true">✓</span> Everything in Pro, plus</li>
+              <li><span class="check" aria-hidden="true">✓</span> Unlimited routes & stops</li>
+              <li><span class="check" aria-hidden="true">✓</span> Unlimited campaigns</li>
+              <li><span class="check" aria-hidden="true">✓</span> Unlimited property entries</li>
+              <li><span class="check" aria-hidden="true">✓</span> Unlimited team members</li>
+              <li><span class="check" aria-hidden="true">✓</span> Unlimited team resource uploads</li>
+              <li><span class="check" aria-hidden="true">✓</span> Centralized team media library</li>
+              <li><span class="check" aria-hidden="true">✓</span> Unlimited bulk property imports</li>
+            </ul>
+
+            <div class="spacer"></div>
+          </article>
+        </div>
+
+        <div class="pricing-cta">
+          <a class="btn btn-primary" href="https://testflight.apple.com/join/hyxPFyv3" target="_blank" rel="noopener">
+            Try Groundmark FREE
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7-DAY TRIAL BANNER -->
+    <section class="trial-section" id="trial-banner">
+      <div class="container">
+        <div class="trial-banner">
+          <div class="trial-copy">
+            <div class="kicker">START RISK-FREE</div>
+            <div class="trial-title">Upgrade anytime — 7-day free trial on Pro &amp; Elite.</div>
+            <p class="trial-text">
+              Explore Pro or Elite with full access to premium features before committing. Test route history, campaign exports,
+              expanded team capacity, and advanced field tracking with a 7-day free trial on all paid plans.
+            </p>
+
+            <div class="trial-pills">
+              <span class="trial-pill">Pro Trial</span>
+              <span class="trial-pill">Elite Trial</span>
+              <span class="trial-pill">No upfront commitment</span>
+            </div>
+          </div>
+
+          <div>
+            <a class="btn btn-primary" href="https://testflight.apple.com/join/hyxPFyv3" target="_blank" rel="noopener">
+              Start Your Free Trial
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <span>© <span id="year"></span> Heat Studios LLC</span>
+        <span>Built for field teams • Real-time reporting</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="support-modal" id="supportModal">
+    <div class="support-box">
+      <button class="support-close" id="supportClose" type="button" aria-label="Close support modal">✕</button>
+
+      <h3>Groundmark Support</h3>
+
+      <p><strong>Email:</strong><br>
+        <a href="mailto:groundmarksupport@vanguardpropertybuyers.com">
+          groundmarksupport@vanguardpropertybuyers.com
+        </a>
+      </p>
+
+      <p><strong>Phone:</strong><br>
+        <a href="tel:18326620820">
+          832-662-0820
+        </a>
+      </p>
+
+      <p><strong>Hours of Operation</strong><br>
+        Mon – Friday: 9-5 PM CST
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const LIGHT_LOGO = "https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/Groundmark%20Logo.png/:/rs=w:1440,h:1440";
+    const DARK_LOGO = "https://img1.wsimg.com/isteam/ip/8156c6b3-c4da-4472-bfd7-ec8ad76daafa/Groundmark%20Logo%20Dropshadow.png/:/rs=w:1440,h:1440";
+
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    const brandLogo = document.getElementById("brandLogo");
+    const themeToggleDesktop = document.getElementById("themeToggleDesktop");
+    const themeToggleMobile = document.getElementById("themeToggleMobile");
+    const themeToggleDesktopLabel = document.getElementById("themeToggleDesktopLabel");
+
+    function forceIOSRepaint() {
+      // Helps Mobile Safari repaint fixed/backdrop elements immediately
+      bodyEl.style.webkitTransform = 'translateZ(0)';
+      bodyEl.style.transform = 'translateZ(0)';
+      void bodyEl.offsetHeight;
+      requestAnimationFrame(() => {
+        bodyEl.style.webkitTransform = '';
+        bodyEl.style.transform = '';
+      });
+    }
+
+    function syncToggleState(theme){
+      const pressed = theme === "dark" ? "true" : "false";
+      themeToggleDesktop.setAttribute("aria-pressed", pressed);
+      themeToggleMobile.setAttribute("aria-pressed", pressed);
+      themeToggleDesktopLabel.textContent = theme === "dark" ? "Dark" : "Light";
+    }
+
+    function applyTheme(theme){
+      htmlEl.setAttribute("data-theme", theme);
+      brandLogo.src = theme === "dark" ? DARK_LOGO : LIGHT_LOGO;
+      syncToggleState(theme);
+      localStorage.setItem("groundmark-theme", theme);
+
+      // Force repaint so mobile Safari updates immediately
+      forceIOSRepaint();
+      setTimeout(forceIOSRepaint, 60);
+    }
+
+    const savedTheme = localStorage.getItem("groundmark-theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    applyTheme(savedTheme || (prefersDark ? "dark" : "light"));
+
+    function toggleTheme() {
+      const current = htmlEl.getAttribute("data-theme");
+      applyTheme(current === "dark" ? "light" : "dark");
+    }
+
+    themeToggleDesktop.addEventListener("click", toggleTheme);
+    themeToggleMobile.addEventListener("click", toggleTheme);
+
+    // Screenshot carousel
+    const viewport = document.getElementById("carouselViewport");
+
+    document.getElementById("carouselPrev").onclick = () => {
+      viewport.scrollBy({left:-400, behavior:"smooth"});
+    };
+
+    document.getElementById("carouselNext").onclick = () => {
+      viewport.scrollBy({left:400, behavior:"smooth"});
+    };
+
+    // Support modal
+    const supportBtn = document.getElementById("supportBtn");
+    const supportModal = document.getElementById("supportModal");
+    const supportClose = document.getElementById("supportClose");
+
+    supportBtn.onclick = (e) => {
+      e.preventDefault();
+      supportModal.classList.add("active");
+    };
+
+    supportClose.onclick = () => {
+      supportModal.classList.remove("active");
+    };
+
+    supportModal.onclick = (e) => {
+      if(e.target === supportModal){
+        supportModal.classList.remove("active");
+      }
+    };
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        supportModal.classList.remove("active");
+      }
+    });
+  </script>
+</body>
+</html>
